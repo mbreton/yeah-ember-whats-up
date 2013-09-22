@@ -5,9 +5,6 @@ Présentation pour le Ember JS Meetup du 24 septembre sur les nouveautés d'Embe
 
 #Points abordés
 
-##Backburner
-
-##Securité
 
 ##Route asynchrone
 ###Abort
@@ -24,6 +21,12 @@ Présentation pour le Ember JS Meetup du 24 septembre sur les nouveautés d'Embe
 
 ##Component
 
+
+##Backburner
+
+##Securité
+
+--------------------------------------------------------------------------------------------------------------
 ##Macros
 
 ##Ember-testing

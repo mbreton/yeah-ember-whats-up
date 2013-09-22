@@ -150,6 +150,176 @@ transform: scale(0.79, 0.79)">
 
 </div>
 
+<div class="step future" data-x="10000" data-y="0" id="step-3">
+<div class="defaultbg slideContainer" style="width: 1024px; height: 768px">
+        <h1>Mise à jour du Routeur</h1>        
+        <ul>
+            <li><code>transitionTo</code> et les "transitions par URL" se comporte maintenant de la même façon (déclenchement de hooks par exemple)</li>
+            <li>Les 2 méthodes attendent maintenant la résolution de promesse renvoyées par le model avant de finir la transition</li>            
+        </ul>
+</div>
+</div>
+
+<div class="step future" data-x="15000" data-y="0" id="step-4">
+<div class="defaultbg slideContainer" style="width: 1024px; height: 768px">
+        <h1>Manipulation de transition via le model</h1>        
+        <ul>
+            <li>2 nouvelles méthodes&nbsp;: <code>beforeModel</code>, <code>afterModel</code> en plus de <code>model</code> dans le routeur pour manipuler les transitions</li>
+            <li> Chacune de ces 3 méthodes peut mettre la transition en attente en renvoyant une promesse</li>            
+        </ul>
+<pre><code>
+App.MyRoute = Em.Route.extend({
+  beforeModel: function(transition) {
+        if(!this.controllerFor('login').get('isLogged')) {
+            this.transitionTo('login');
+        }
+  }
+});
+
+</code></pre>
+</div>
+</div>
+
+<div class="step future" data-x="20000" data-y="0" id="step-5">
+<div class="defaultbg slideContainer" style="width: 1024px; height: 768px">
+        <h1>Manipulation de transition via les évènements</h1>        
+        <p>Ajout d'un évènement <code>willTransition</code> permettant de rediriger, annuler ou décorer la transition en cours</p>
+        <pre><code>
+App.MyRoute = Em.Route.extend({
+  actions: {
+     willTransition: function(transition) {
+        if(false) {
+            transition.abort();
+        }
+     }
+  }
+});
+
+        </code></pre>
+</div>
+</div>
+
+<div class="step future" data-x="25000" data-y="0" id="step-6">
+<div class="defaultbg slideContainer" style="width: 1024px; height: 768px">
+        <h1>Gestion d'erreur</h1>        
+        <p>En cas de promesse rejeté, ou d'erreur lancé depuis les méthodes <code>beforeModel</code>,<code>model</code>, ou <code>afterModel</code> un evenement erreur est lancé</p>
+        <pre><code>
+App.MyRoute = Em.Route.extend({
+  model: function() {
+        return $.getJSON('invalidURL'); // $.getJSON renvoit une promesse
+  },
+  actions: {
+     error: function(reason, transition) {
+        console.log(reason.message);
+        if(reason.status == 401) {
+            this.transitionTo('login'); // redirection
+        } else {
+            return true; //bubble de l'erreur
+        }
+     }
+  }
+});
+
+        </code></pre>
+</div>
+</div>
+
+<div class="step future" data-x="30000" data-y="0" id="step-7">
+<div class="defaultbg slideContainer" style="width: 1024px; height: 768px">
+        <h1>Rejouabilité des transitions</h1>        
+        <ul>
+            <li>Les objets transitions peuvent être sauvegardé et rejoué par la suite via la méthode <code>retry</code></li>
+            <li>Un cas d'usage classique : l'authentification ; vous etes redirigé vers la bonne page après authentification</li>
+        </ul>
+        
+</div>
+</div>
+
+<div class="step future" data-x="35000" data-y="0" id="step-8">
+<div class="defaultbg slideContainer" style="width: 1024px; height: 768px">
+        <h1>Évènements</h1>        
+        <ul>
+            <li>Déclaration des actions dans un attribut <code>actions</code> des controllers et des routes</li>
+            <li> <code>actions</code> remplace donc <code>events</code> dans les routes</li>
+        </ul>
+         <pre><code>
+//dans un template
+&lt;button {{action 'save'}}&gt;save&lt;/button&gt;
+
+//Dans le code JS
+App.MyController = Em.Controller.extend({
+    actions: {
+        save: function() {
+            // Code métier
+            return true; //bubbling
+        }
+    }
+});
+
+App.MyRoute = Em.Route.extend({
+    actions: {
+        save: function() {
+            // l'évenement bubble jusqu'à la route
+        }
+    }
+});
+
+        </code></pre>
+</div>
+</div>
+
+<div class="step future" data-x="40000" data-y="0" id="step-9">
+<div class="defaultbg slideContainer" style="width: 1024px; height: 768px">
+        <h1>Component</h1>        
+        <ul>
+            <li>Un "component" est un bout de code réutilisable généralement constitué d'un template et d'une vue</li>
+            <li>Les "components" d'Ember se veulent être le plus proche possible des "Web Components" définis par le W3C</li>
+        </ul>
+
+        
+             <pre><code>
+&lt;script type="text/x-handlebars" id="components/blog-post"&gt;
+  &lt;h1&gt;Blog Post : {{title}}&lt;/h1&gt;
+  &lt;p&gt;{{yield}}&lt;/p&gt;
+&lt;/script&gt;
+
+
+//Dans un autre template :
+{{#each}}
+  {{#blog-post title=title}}
+        {{body}}
+  {{/blog-post}}
+{{/each}}
+
+        </code></pre>
+</div>
+</div>
+
+<div class="step future" data-x="45000" data-y="0" id="step-10">
+<div class="defaultbg slideContainer" style="width: 1024px; height: 768px">
+        <h1>Mise à jour de sécurité</h1>        
+        <ul>
+            <li>Ember en version antérieur à la RC7 était exposé à des attaques de type XSS</li>
+            <li>Des versions *.1 sont sorties rapidement pour corriger cette faille (RC6.1, RC5.1, RC4.1, etc.)</li>
+            <li>Si vous utilisez une version non patchée, pensez à la mettre à jour !</li>
+        </ul>
+        
+</div>
+</div>
+
+<div class="step future" data-x="50000" data-y="0" id="step-11">
+<div class="defaultbg slideContainer" style="width: 1024px; height: 768px">
+        <h1>Divers</h1>        
+        <ul>
+            <li>La run-loop est maintenant séparé dans son propre module "Backburner"</li>
+            <li>Les observers ne sont plus déclenchés à la construction de la classe</li>
+            <li>Si vous utilisez une version non patchée, pensez à la mettre à jour !</li>
+        </ul>
+        
+</div>
+</div>
+
+
 
 <div id="overview" class="step active future" data-x="2600.96" data-y="1051.3066666666666" data-scale="9" style="position: absolute; -webkit-transform: translate(-50%, -50%) translate3d(2600.96px, 1051.3066666666666px, 0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(9); -webkit-transform-style: preserve-3d;"></div>
 </div></div>
