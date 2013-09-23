@@ -154,7 +154,7 @@ transform: scale(0.79, 0.79)">
 <div class="defaultbg slideContainer" style="width: 1024px; height: 768px">
         <h1>Mise à jour du Routeur</h1>        
         <ul>
-            <li><code>transitionTo</code> et les "transitions par URL" se comporte maintenant de la même façon (déclenchement de hooks par exemple)</li>
+            <li><code>transitionTo</code> et les "transitions par URL" se comportent maintenant de la même façon (déclenchement des même hooks par exemple)</li>
             <li>Les 2 méthodes attendent maintenant la résolution de promesse renvoyées par le model avant de finir la transition</li>            
         </ul>
 </div>
@@ -165,7 +165,8 @@ transform: scale(0.79, 0.79)">
         <h1>Manipulation de transition via le model</h1>        
         <ul>
             <li>2 nouvelles méthodes&nbsp;: <code>beforeModel</code>, <code>afterModel</code> en plus de <code>model</code> dans le routeur pour manipuler les transitions</li>
-            <li> Chacune de ces 3 méthodes peut mettre la transition en attente en renvoyant une promesse</li>            
+            <li> Chacune de ces 3 méthodes peut mettre la transition en attente en renvoyant une promesse</li>
+            <li> Elles peuvent aussi annuler la transition, ou encore faire une redirection</li>
         </ul>
 <pre><code>
 App.MyRoute = Em.Route.extend({
@@ -202,7 +203,7 @@ App.MyRoute = Em.Route.extend({
 <div class="step future" data-x="25000" data-y="0" id="step-6">
 <div class="defaultbg slideContainer" style="width: 1024px; height: 768px">
         <h1>Gestion d'erreur</h1>        
-        <p>En cas de promesse rejeté, ou d'erreur lancé depuis les méthodes <code>beforeModel</code>,<code>model</code>, ou <code>afterModel</code> un evenement erreur est lancé</p>
+        <p>En cas de promesse rejetée, ou d'erreur lancée depuis les méthodes <code>beforeModel</code>,<code>model</code>, ou <code>afterModel</code> un évènement erreur est lancé</p>
         <pre><code>
 App.MyRoute = Em.Route.extend({
   model: function() {
@@ -228,8 +229,8 @@ App.MyRoute = Em.Route.extend({
 <div class="defaultbg slideContainer" style="width: 1024px; height: 768px">
         <h1>Rejouabilité des transitions</h1>        
         <ul>
-            <li>Les objets transitions peuvent être sauvegardé et rejoué par la suite via la méthode <code>retry</code></li>
-            <li>Un cas d'usage classique : l'authentification ; vous etes redirigé vers la bonne page après authentification</li>
+            <li>Les objets transitions peuvent être sauvegardés et rejoués par la suite via la méthode <code>retry</code></li>
+            <li>Un cas d'usage classique : l'authentification ; vous êtes redirigé vers la bonne page après authentification</li>
         </ul>
         
 </div>
@@ -277,12 +278,20 @@ App.MyRoute = Em.Route.extend({
         </ul>
 
         
-             <pre><code>
+ <pre><code>
 &lt;script type="text/x-handlebars" id="components/blog-post"&gt;
-  &lt;h1&gt;Blog Post : {{title}}&lt;/h1&gt;
+  &lt;h1  {{action "writeLog"}}&gt;Blog Post : {{title}}&lt;/h1&gt;
   &lt;p&gt;{{yield}}&lt;/p&gt;
 &lt;/script&gt;
 
+
+App.BlogPostComponent = Ember.Component.extend({
+    actions: {
+        writeLog: function() {
+            console.log('Log written');
+        }
+    }
+});
 
 //Dans un autre template :
 {{#each}}
@@ -291,7 +300,7 @@ App.MyRoute = Em.Route.extend({
   {{/blog-post}}
 {{/each}}
 
-        </code></pre>
+</code></pre>
 </div>
 </div>
 
@@ -309,11 +318,10 @@ App.MyRoute = Em.Route.extend({
 
 <div class="step future" data-x="50000" data-y="0" id="step-11">
 <div class="defaultbg slideContainer" style="width: 1024px; height: 768px">
-        <h1>Divers</h1>        
+        <h1>Observers</h1>
         <ul>
-            <li>La run-loop est maintenant séparé dans son propre module "Backburner"</li>
             <li>Les observers ne sont plus déclenchés à la construction de la classe</li>
-            <li>Si vous utilisez une version non patchée, pensez à la mettre à jour !</li>
+            <li>Un observer sur une propriété calculée n'est pas déclenché si la propriété n'est pas utilisée</li>
         </ul>
         
 </div>
